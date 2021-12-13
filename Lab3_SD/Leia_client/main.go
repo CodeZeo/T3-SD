@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"time"
 
-	pb "../comms"
 	"google.golang.org/grpc"
 )
 

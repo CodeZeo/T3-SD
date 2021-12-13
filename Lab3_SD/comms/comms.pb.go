@@ -413,7 +413,7 @@ var file_comms_proto_rawDesc = []byte{
 	0x65, 0x72, 0x52, 0x65, 0x62, 0x65, 0x6c, 0x64, 0x73, 0x12, 0x11, 0x2e, 0x63, 0x6f, 0x6d, 0x6d,
 	0x73, 0x2e, 0x4c, 0x6f, 0x63, 0x61, 0x74, 0x65, 0x43, 0x69, 0x74, 0x79, 0x1a, 0x14, 0x2e, 0x63,
 	0x6f, 0x6d, 0x6d, 0x73, 0x2e, 0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x52, 0x65, 0x62, 0x65, 0x6c,
-	0x64, 0x73, 0x22, 0x00, 0x32, 0x88, 0x02, 0x0a, 0x07, 0x46, 0x75, 0x6c, 0x43, 0x72, 0x75, 0x6d,
+	0x64, 0x73, 0x22, 0x00, 0x32, 0x88, 0x02, 0x0a, 0x07, 0x46, 0x75, 0x6c, 0x63, 0x72, 0x75, 0x6d,
 	0x12, 0x40, 0x0a, 0x13, 0x72, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72,
 	0x52, 0x65, 0x62, 0x65, 0x6c, 0x64, 0x73, 0x12, 0x11, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x73, 0x2e,
 	0x4c, 0x6f, 0x63, 0x61, 0x74, 0x65, 0x43, 0x69, 0x74, 0x79, 0x1a, 0x14, 0x2e, 0x63, 0x6f, 0x6d,
@@ -459,18 +459,18 @@ var file_comms_proto_goTypes = []interface{}{
 var file_comms_proto_depIdxs = []int32{
 	2, // 0: comms.Broker.getIP:input_type -> comms.Command
 	3, // 1: comms.Broker.getNumberRebelds:input_type -> comms.LocateCity
-	3, // 2: comms.FulCrum.returnNumberRebelds:input_type -> comms.LocateCity
-	5, // 3: comms.FulCrum.addCity:input_type -> comms.DataCity
-	5, // 4: comms.FulCrum.updateName:input_type -> comms.DataCity
-	5, // 5: comms.FulCrum.updateNumber:input_type -> comms.DataCity
-	3, // 6: comms.FulCrum.deleteCity:input_type -> comms.LocateCity
+	3, // 2: comms.Fulcrum.returnNumberRebelds:input_type -> comms.LocateCity
+	5, // 3: comms.Fulcrum.addCity:input_type -> comms.DataCity
+	5, // 4: comms.Fulcrum.updateName:input_type -> comms.DataCity
+	5, // 5: comms.Fulcrum.updateNumber:input_type -> comms.DataCity
+	3, // 6: comms.Fulcrum.deleteCity:input_type -> comms.LocateCity
 	0, // 7: comms.Broker.getIP:output_type -> comms.Conn
 	4, // 8: comms.Broker.getNumberRebelds:output_type -> comms.NumberRebelds
-	4, // 9: comms.FulCrum.returnNumberRebelds:output_type -> comms.NumberRebelds
-	6, // 10: comms.FulCrum.addCity:output_type -> comms.clock
-	6, // 11: comms.FulCrum.updateName:output_type -> comms.clock
-	6, // 12: comms.FulCrum.updateNumber:output_type -> comms.clock
-	6, // 13: comms.FulCrum.deleteCity:output_type -> comms.clock
+	4, // 9: comms.Fulcrum.returnNumberRebelds:output_type -> comms.NumberRebelds
+	6, // 10: comms.Fulcrum.addCity:output_type -> comms.clock
+	6, // 11: comms.Fulcrum.updateName:output_type -> comms.clock
+	6, // 12: comms.Fulcrum.updateNumber:output_type -> comms.clock
+	6, // 13: comms.Fulcrum.deleteCity:output_type -> comms.clock
 	7, // [7:14] is the sub-list for method output_type
 	0, // [0:7] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

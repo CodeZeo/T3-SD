@@ -1,57 +1,66 @@
-/*
- *
- * Copyright 2015 gRPC authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
-// Package main implements a client for Greeter service.
 package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	"log"
-	"os"
+	"strconv"
 	"time"
 
+	pb "../comms"
 	"google.golang.org/grpc"
 )
 
 const (
-	address     = "localhost:50051"
 	defaultName = "world"
 )
 
-func main() {
+var (
+	addr = flag.String("addr", "localhost:50051", "the address to connect to")
+	name = flag.String("name", defaultName, "Name to greet")
+)
+
+func gnr() {
+	flag.Parse()
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(*addr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
+	c := pb.NewBrokerClient(conn)
 
+	var planeta string
+	var ciudad string
+
+	fmt.Println("Ingrese el planeta a buscar: ")
+	fmt.Scanln(&planeta)
+
+	fmt.Println("Ingrese la ciudad a buscar: ")
+	fmt.Scanln(&ciudad)
 	// Contact the server and print out its response.
-	name := defaultName
-	if len(os.Args) > 1 {
-		name = os.Args[1]
-	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: name})
+	r, err := c.GetNumberRebelds(ctx, &pb.LocateCity{NombrePlaneta: planeta, NombreCiudad: ciudad})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Greeting: %s", r.GetMessage())
+	log.Printf("La cantidad de rebeldes es: %s", strconv.Itoa(int(r.NR)))
+}
+
+func main() {
+	flag := true
+	var opcion int
+	for flag {
+		fmt.Println("Ingrese una opcion: ")
+		fmt.Println("1) Ver rebeldes en ciudad.")
+		fmt.Println("2) Salir.")
+		fmt.Scanln(&opcion)
+		if opcion == 1 {
+			gnr()
+		} else {
+			flag = false
+		}
+	}
 }

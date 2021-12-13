@@ -136,10 +136,10 @@ var Broker_ServiceDesc = grpc.ServiceDesc{
 	Metadata: "comms.proto",
 }
 
-// FulCrumClient is the client API for FulCrum service.
+// FulcrumClient is the client API for Fulcrum service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type FulCrumClient interface {
+type FulcrumClient interface {
 	ReturnNumberRebelds(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*NumberRebelds, error)
 	AddCity(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error)
 	UpdateName(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error)
@@ -147,219 +147,219 @@ type FulCrumClient interface {
 	DeleteCity(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*Clock, error)
 }
 
-type fulCrumClient struct {
+type fulcrumClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewFulCrumClient(cc grpc.ClientConnInterface) FulCrumClient {
-	return &fulCrumClient{cc}
+func NewFulcrumClient(cc grpc.ClientConnInterface) FulcrumClient {
+	return &fulcrumClient{cc}
 }
 
-func (c *fulCrumClient) ReturnNumberRebelds(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*NumberRebelds, error) {
+func (c *fulcrumClient) ReturnNumberRebelds(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*NumberRebelds, error) {
 	out := new(NumberRebelds)
-	err := c.cc.Invoke(ctx, "/comms.FulCrum/returnNumberRebelds", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/comms.Fulcrum/returnNumberRebelds", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *fulCrumClient) AddCity(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error) {
+func (c *fulcrumClient) AddCity(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error) {
 	out := new(Clock)
-	err := c.cc.Invoke(ctx, "/comms.FulCrum/addCity", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/comms.Fulcrum/addCity", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *fulCrumClient) UpdateName(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error) {
+func (c *fulcrumClient) UpdateName(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error) {
 	out := new(Clock)
-	err := c.cc.Invoke(ctx, "/comms.FulCrum/updateName", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/comms.Fulcrum/updateName", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *fulCrumClient) UpdateNumber(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error) {
+func (c *fulcrumClient) UpdateNumber(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error) {
 	out := new(Clock)
-	err := c.cc.Invoke(ctx, "/comms.FulCrum/updateNumber", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/comms.Fulcrum/updateNumber", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *fulCrumClient) DeleteCity(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*Clock, error) {
+func (c *fulcrumClient) DeleteCity(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*Clock, error) {
 	out := new(Clock)
-	err := c.cc.Invoke(ctx, "/comms.FulCrum/deleteCity", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/comms.Fulcrum/deleteCity", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// FulCrumServer is the server API for FulCrum service.
-// All implementations must embed UnimplementedFulCrumServer
+// FulcrumServer is the server API for Fulcrum service.
+// All implementations must embed UnimplementedFulcrumServer
 // for forward compatibility
-type FulCrumServer interface {
+type FulcrumServer interface {
 	ReturnNumberRebelds(context.Context, *LocateCity) (*NumberRebelds, error)
 	AddCity(context.Context, *DataCity) (*Clock, error)
 	UpdateName(context.Context, *DataCity) (*Clock, error)
 	UpdateNumber(context.Context, *DataCity) (*Clock, error)
 	DeleteCity(context.Context, *LocateCity) (*Clock, error)
-	mustEmbedUnimplementedFulCrumServer()
+	mustEmbedUnimplementedFulcrumServer()
 }
 
-// UnimplementedFulCrumServer must be embedded to have forward compatible implementations.
-type UnimplementedFulCrumServer struct {
+// UnimplementedFulcrumServer must be embedded to have forward compatible implementations.
+type UnimplementedFulcrumServer struct {
 }
 
-func (UnimplementedFulCrumServer) ReturnNumberRebelds(context.Context, *LocateCity) (*NumberRebelds, error) {
+func (UnimplementedFulcrumServer) ReturnNumberRebelds(context.Context, *LocateCity) (*NumberRebelds, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReturnNumberRebelds not implemented")
 }
-func (UnimplementedFulCrumServer) AddCity(context.Context, *DataCity) (*Clock, error) {
+func (UnimplementedFulcrumServer) AddCity(context.Context, *DataCity) (*Clock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCity not implemented")
 }
-func (UnimplementedFulCrumServer) UpdateName(context.Context, *DataCity) (*Clock, error) {
+func (UnimplementedFulcrumServer) UpdateName(context.Context, *DataCity) (*Clock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateName not implemented")
 }
-func (UnimplementedFulCrumServer) UpdateNumber(context.Context, *DataCity) (*Clock, error) {
+func (UnimplementedFulcrumServer) UpdateNumber(context.Context, *DataCity) (*Clock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateNumber not implemented")
 }
-func (UnimplementedFulCrumServer) DeleteCity(context.Context, *LocateCity) (*Clock, error) {
+func (UnimplementedFulcrumServer) DeleteCity(context.Context, *LocateCity) (*Clock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCity not implemented")
 }
-func (UnimplementedFulCrumServer) mustEmbedUnimplementedFulCrumServer() {}
+func (UnimplementedFulcrumServer) mustEmbedUnimplementedFulcrumServer() {}
 
-// UnsafeFulCrumServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to FulCrumServer will
+// UnsafeFulcrumServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FulcrumServer will
 // result in compilation errors.
-type UnsafeFulCrumServer interface {
-	mustEmbedUnimplementedFulCrumServer()
+type UnsafeFulcrumServer interface {
+	mustEmbedUnimplementedFulcrumServer()
 }
 
-func RegisterFulCrumServer(s grpc.ServiceRegistrar, srv FulCrumServer) {
-	s.RegisterService(&FulCrum_ServiceDesc, srv)
+func RegisterFulcrumServer(s grpc.ServiceRegistrar, srv FulcrumServer) {
+	s.RegisterService(&Fulcrum_ServiceDesc, srv)
 }
 
-func _FulCrum_ReturnNumberRebelds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Fulcrum_ReturnNumberRebelds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LocateCity)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FulCrumServer).ReturnNumberRebelds(ctx, in)
+		return srv.(FulcrumServer).ReturnNumberRebelds(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/comms.FulCrum/returnNumberRebelds",
+		FullMethod: "/comms.Fulcrum/returnNumberRebelds",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FulCrumServer).ReturnNumberRebelds(ctx, req.(*LocateCity))
+		return srv.(FulcrumServer).ReturnNumberRebelds(ctx, req.(*LocateCity))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FulCrum_AddCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Fulcrum_AddCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DataCity)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FulCrumServer).AddCity(ctx, in)
+		return srv.(FulcrumServer).AddCity(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/comms.FulCrum/addCity",
+		FullMethod: "/comms.Fulcrum/addCity",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FulCrumServer).AddCity(ctx, req.(*DataCity))
+		return srv.(FulcrumServer).AddCity(ctx, req.(*DataCity))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FulCrum_UpdateName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Fulcrum_UpdateName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DataCity)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FulCrumServer).UpdateName(ctx, in)
+		return srv.(FulcrumServer).UpdateName(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/comms.FulCrum/updateName",
+		FullMethod: "/comms.Fulcrum/updateName",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FulCrumServer).UpdateName(ctx, req.(*DataCity))
+		return srv.(FulcrumServer).UpdateName(ctx, req.(*DataCity))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FulCrum_UpdateNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Fulcrum_UpdateNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DataCity)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FulCrumServer).UpdateNumber(ctx, in)
+		return srv.(FulcrumServer).UpdateNumber(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/comms.FulCrum/updateNumber",
+		FullMethod: "/comms.Fulcrum/updateNumber",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FulCrumServer).UpdateNumber(ctx, req.(*DataCity))
+		return srv.(FulcrumServer).UpdateNumber(ctx, req.(*DataCity))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FulCrum_DeleteCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Fulcrum_DeleteCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LocateCity)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FulCrumServer).DeleteCity(ctx, in)
+		return srv.(FulcrumServer).DeleteCity(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/comms.FulCrum/deleteCity",
+		FullMethod: "/comms.Fulcrum/deleteCity",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FulCrumServer).DeleteCity(ctx, req.(*LocateCity))
+		return srv.(FulcrumServer).DeleteCity(ctx, req.(*LocateCity))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// FulCrum_ServiceDesc is the grpc.ServiceDesc for FulCrum service.
+// Fulcrum_ServiceDesc is the grpc.ServiceDesc for Fulcrum service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var FulCrum_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "comms.FulCrum",
-	HandlerType: (*FulCrumServer)(nil),
+var Fulcrum_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "comms.Fulcrum",
+	HandlerType: (*FulcrumServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "returnNumberRebelds",
-			Handler:    _FulCrum_ReturnNumberRebelds_Handler,
+			Handler:    _Fulcrum_ReturnNumberRebelds_Handler,
 		},
 		{
 			MethodName: "addCity",
-			Handler:    _FulCrum_AddCity_Handler,
+			Handler:    _Fulcrum_AddCity_Handler,
 		},
 		{
 			MethodName: "updateName",
-			Handler:    _FulCrum_UpdateName_Handler,
+			Handler:    _Fulcrum_UpdateName_Handler,
 		},
 		{
 			MethodName: "updateNumber",
-			Handler:    _FulCrum_UpdateNumber_Handler,
+			Handler:    _Fulcrum_UpdateNumber_Handler,
 		},
 		{
 			MethodName: "deleteCity",
-			Handler:    _FulCrum_DeleteCity_Handler,
+			Handler:    _Fulcrum_DeleteCity_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,0 +1,50 @@
+syntax = "proto3";
+package comms;
+
+option go_package = "./;comms";
+
+message Conn {
+    string ip = 1;
+}
+
+message Empty {
+    // No poner nada, está asi a proposito
+}
+
+message Command {
+    string c = 1;
+}
+
+message LocateCity {
+    string nombrePlaneta = 1;
+    string nombreCiudad = 2;
+}
+
+message NumberRebelds{
+    int32 nR = 1;
+}
+
+message DataCity {
+    string nombre_planeta = 1;
+    string nombre_ciudad = 2;
+    int32 nuevo_valor = 3; // 0 si es que no se escribe uno
+}
+
+message clock {
+    int32 x = 1;
+    int32 y = 2;
+    int32 z = 3;
+}
+
+service Broker {
+    rpc getIP(Command) returns (Conn){}
+    rpc getNumberRebelds(LocateCity) returns (NumberRebelds){}
+}
+
+service Fulcrum {
+    rpc returnNumberRebelds(LocateCity) returns (NumberRebelds){}
+    rpc addCity(DataCity) returns (clock){}
+    rpc updateName(DataCity) returns (clock){}
+    rpc updateNumber(DataCity) returns (clock){}
+    rpc deleteCity(LocateCity) returns (clock){}
+}

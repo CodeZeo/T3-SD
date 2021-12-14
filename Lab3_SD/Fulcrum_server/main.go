@@ -38,19 +38,30 @@ func fileToSlice(fileName string) ([][]string, error) {
 	return result, nil
 }
 
+func lineValid(line []string) bool {
+	for _, cosa := range line {
+		if len(cosa) > 0 {
+			return true
+		}
+	}
+	return false
+}
+
 func sliceToFile(slice [][]string, fileName string) {
 	f, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		log.Fatal(err)
 	}
 	for _, line := range slice {
-		for _, word := range line {
-			if _, err := f.WriteString(word + " "); err != nil {
+		if lineValid(line) {
+			for _, word := range line {
+				if _, err := f.WriteString(word + " "); err != nil {
+					log.Fatal(err)
+				}
+			}
+			if _, err := f.WriteString("\n"); err != nil {
 				log.Fatal(err)
 			}
-		}
-		if _, err := f.WriteString("\n"); err != nil {
-			log.Fatal(err)
 		}
 	}
 	if err := f.Close(); err != nil {
@@ -66,6 +77,8 @@ func createFile(name string) {
 }
 
 func fileAddCity(nombrePlaneta string, nombreCiudad string, valor int) {
+	fmt.Println("started file add city")
+	fmt.Println(nombrePlaneta) // esto esta vacio
 	fileName := nombrePlaneta + ".txt"
 	append := nombrePlaneta + " " + nombreCiudad + " " + strconv.Itoa(valor) + "\n"
 	createFile(fileName)
@@ -87,8 +100,10 @@ func fileUpdateName(nombrePlaneta string, nombreCiudad string, nuevoNombre strin
 		log.Fatal(err)
 	}
 	for i, line := range content {
-		if line[1] == nombreCiudad {
-			content[i][1] = nuevoNombre
+		if len(line) > 1 {
+			if line[1] == nombreCiudad {
+				content[i][1] = nuevoNombre
+			}
 		}
 	}
 	sliceToFile(content, nombrePlaneta+".txt")
@@ -100,8 +115,10 @@ func fileUpdateNumber(nombrePlaneta string, nombreCiudad string, valor int) {
 		log.Fatal(err)
 	}
 	for i, line := range content {
-		if line[1] == nombreCiudad {
-			content[i][2] = strconv.Itoa(valor)
+		if len(line) > 2 {
+			if line[1] == nombreCiudad {
+				content[i][2] = strconv.Itoa(valor)
+			}
 		}
 	}
 	sliceToFile(content, nombrePlaneta+".txt")
@@ -114,8 +131,10 @@ func fileDeleteCity(nombrePlaneta string, nombreCiudad string) {
 	}
 	var result [][]string
 	for _, line := range content {
-		if line[1] != nombreCiudad {
-			result = append(result, line)
+		if len(line) > 1 {
+			if line[1] != nombreCiudad {
+				result = append(result, line)
+			}
 		}
 	}
 	sliceToFile(result, nombrePlaneta+".txt")

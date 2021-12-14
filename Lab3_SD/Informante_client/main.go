@@ -49,7 +49,7 @@ func agCity(Data *pb.DataCity) pb.Clock {
 	defer conn.Close()
 	ccc := pb.NewFulcrumClient(conn)
 	//realizar Create
-	reloj, err := ccc.AddCity(context.Background(), &pb.DataCity{})
+	reloj, err := ccc.AddCity(context.Background(), &pb.DataCity{NombrePlaneta: Data.NombrePlaneta, NombreCiudad: Data.NombreCiudad, NuevoValor: Data.NuevoValor})
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}
@@ -83,7 +83,7 @@ func upNCity(Data *pb.ChangeNameCity) pb.Clock {
 	defer conn.Close()
 	ccc := pb.NewFulcrumClient(conn)
 	//realizar Create
-	reloj, err := ccc.UpdateName(context.Background(), &pb.ChangeNameCity{})
+	reloj, err := ccc.UpdateName(context.Background(), &pb.ChangeNameCity{NombrePlaneta: Data.NombrePlaneta, NombreCiudad: Data.NombreCiudad, NuevoNombre: Data.NuevoNombre})
 	if err != nil {
 		log.Fatalf("did not update: %s", err)
 	}
@@ -116,7 +116,7 @@ func upVCity(Data *pb.DataCity) pb.Clock {
 	defer conn.Close()
 	ccc := pb.NewFulcrumClient(conn)
 	//realizar Create
-	reloj, err := ccc.UpdateNumber(context.Background(), &pb.DataCity{})
+	reloj, err := ccc.UpdateNumber(context.Background(), &pb.DataCity{NombrePlaneta: Data.NombrePlaneta, NombreCiudad: Data.NombreCiudad, NuevoValor: Data.NuevoValor})
 	if err != nil {
 		log.Fatalf("did not update: %s", err)
 	}
@@ -149,7 +149,7 @@ func DeleteC(Data *pb.LocateCity) pb.Clock {
 	defer conn.Close()
 	ccc := pb.NewFulcrumClient(conn)
 	//realizar Create
-	reloj, err := ccc.DeleteCity(context.Background(), &pb.LocateCity{})
+	reloj, err := ccc.DeleteCity(context.Background(), &pb.LocateCity{NombrePlaneta: Data.NombrePlaneta, NombreCiudad: Data.NombreCiudad})
 	if err != nil {
 		log.Fatalf("did not delete: %s", err)
 	}

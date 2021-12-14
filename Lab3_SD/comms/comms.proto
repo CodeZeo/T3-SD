@@ -42,6 +42,10 @@ message clock {
     int32 z = 3;
 }
 
+message Planet {
+    string planet = 1;
+}
+
 service Broker {
     rpc getIP(Command) returns (Conn){}
     rpc getNumberRebelds(LocateCity) returns (NumberRebelds){}
@@ -53,4 +57,5 @@ service Fulcrum {
     rpc updateName(ChangeNameCity) returns (clock){}
     rpc updateNumber(DataCity) returns (clock){}
     rpc deleteCity(LocateCity) returns (clock){}
+    rpc getClock(Planet) returns (clock){}
 }

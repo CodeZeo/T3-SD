@@ -5,8 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"strconv"
-	"time"
 
 	pb "github.com/CodeZeo/T3-SD/Lab3_SD/comms"
 	"google.golang.org/grpc"
@@ -21,6 +19,33 @@ var (
 	name = flag.String("name", defaultName, "Name to greet")
 )
 
+func agCity(Data *pb.DataCity) pb.Clock {
+	//Consultar por la ip de un Server Fulcrum
+	var conn *grpc.ClientConn
+	conn, err := grpc.Dial("localhost:9003", grpc.WithInsecure())
+	if err != nil {
+		conn, err = grpc.Dial("localhost:9004", grpc.WithInsecure())
+		if err != nil {
+			log.Fatalf("did not connect: %s", err)
+		}
+	}
+	defer conn.Close()
+	cc := pb.NewBrokerClient(conn)
+	comando := "AddCity " + Data.NombrePlaneta + " " + Data.NombreCiudad
+	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
+	//conectar al Fulcrum
+	conn, err = grpc.Dial(response.Ip+":9005", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %s", err)
+	}
+	defer conn.Close()
+	ccc := pb.NewFulcrumClient(conn)
+	//realizar Create
+	reloj, err := ccc.AddCity(context.Background(), &pb.DataCity{})
+
+	return pb.Clock{X: int32(reloj.X), Y: int32(reloj.Y), Z: int32(reloj.Z)}
+}
+
 func gnr() {
 	flag.Parse()
 	// Set up a connection to the server.
@@ -29,7 +54,7 @@ func gnr() {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewBrokerClient(conn)
+	//c := pb.NewBrokerClient(conn)
 
 	var planeta string
 	var ciudad string
@@ -40,16 +65,20 @@ func gnr() {
 	fmt.Println("Ingrese la ciudad a buscar: ")
 	fmt.Scanln(&ciudad)
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.GetNumberRebelds(ctx, &pb.LocateCity{NombrePlaneta: planeta, NombreCiudad: ciudad})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-	log.Printf("La cantidad de rebeldes es: %s", strconv.Itoa(int(r.NR)))
+	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	//defer cancel()
+	r := agCity(&pb.DataCity{NombrePlaneta: planeta, NombreCiudad: ciudad, NuevoValor: 0})
+	//if err != nil {
+	//	log.Fatalf("could not greet: %v", err)
+	//}
+	//log.Printf("El reloj es: %s", strconv.Itoa(int(r.NR)))
 }
 
 func main() {
+	//conectar al Broker
+
+	//agCity()
+
 	flag := true
 	var opcion int
 	for flag {
@@ -61,6 +90,7 @@ func main() {
 			gnr()
 		} else {
 			flag = false
+
 		}
 	}
 }

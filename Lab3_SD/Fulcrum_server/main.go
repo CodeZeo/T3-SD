@@ -98,6 +98,23 @@ func fileAddCity(nombrePlaneta string, nombreCiudad string, valor int) {
 	if err := f.Close(); err != nil {
 		log.Fatal(err)
 	}
+	//Archivo Log
+	fmt.Println("started file Log")
+	fmt.Println(nombrePlaneta) // esto esta vacio
+	fileName2 := nombrePlaneta + "_Log.txt"
+	append2 := "AddCity " + nombrePlaneta + " " + nombreCiudad + " " + strconv.Itoa(valor) + "\n"
+	createFile(fileName2)
+	f2, err2 := os.OpenFile(fileName2, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+	if _, err := f2.Write([]byte(append2)); err != nil {
+		log.Fatal(err)
+	}
+	if err := f2.Close(); err != nil {
+		log.Fatal(err)
+	}
+
 }
 
 func fileUpdateName(nombrePlaneta string, nombreCiudad string, nuevoNombre string) {
@@ -113,6 +130,23 @@ func fileUpdateName(nombrePlaneta string, nombreCiudad string, nuevoNombre strin
 		}
 	}
 	sliceToFile(content, nombrePlaneta+".txt")
+
+	//Archivo Log
+	fmt.Println("started file Log")
+	fmt.Println(nombrePlaneta) // esto esta vacio
+	fileName2 := nombrePlaneta + "_Log.txt"
+	append2 := "UpdateName " + nombrePlaneta + " " + nombreCiudad + " " + nuevoNombre + "\n"
+	createFile(fileName2)
+	f2, err2 := os.OpenFile(fileName2, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+	if _, err := f2.Write([]byte(append2)); err != nil {
+		log.Fatal(err)
+	}
+	if err := f2.Close(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func fileUpdateNumber(nombrePlaneta string, nombreCiudad string, valor int) {
@@ -128,6 +162,23 @@ func fileUpdateNumber(nombrePlaneta string, nombreCiudad string, valor int) {
 		}
 	}
 	sliceToFile(content, nombrePlaneta+".txt")
+
+	//Archivo Log
+	fmt.Println("started file Log")
+	fmt.Println(nombrePlaneta) // esto esta vacio
+	fileName2 := nombrePlaneta + "_Log.txt"
+	append2 := "UpdateNumber " + nombrePlaneta + " " + nombreCiudad + " " + strconv.Itoa(valor) + "\n"
+	createFile(fileName2)
+	f2, err2 := os.OpenFile(fileName2, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+	if _, err := f2.Write([]byte(append2)); err != nil {
+		log.Fatal(err)
+	}
+	if err := f2.Close(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func fileDeleteCity(nombrePlaneta string, nombreCiudad string) {
@@ -144,6 +195,23 @@ func fileDeleteCity(nombrePlaneta string, nombreCiudad string) {
 		}
 	}
 	sliceToFile(result, nombrePlaneta+".txt")
+
+	//Archivo Log
+	fmt.Println("started file Log")
+	fmt.Println(nombrePlaneta) // esto esta vacio
+	fileName2 := nombrePlaneta + "_Log.txt"
+	append2 := "DeleteCity " + nombrePlaneta + " " + nombreCiudad + "\n"
+	createFile(fileName2)
+	f2, err2 := os.OpenFile(fileName2, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+	if _, err := f2.Write([]byte(append2)); err != nil {
+		log.Fatal(err)
+	}
+	if err := f2.Close(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 // retorna -1 si el planeta no existe

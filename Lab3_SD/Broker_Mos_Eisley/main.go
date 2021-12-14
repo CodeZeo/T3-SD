@@ -9,7 +9,7 @@ import (
 	"net"
 	"time"
 
-	pb "../comms"
+	pb "github.com/CodeZeo/T3-SD/Lab3_SD/comms"
 	"google.golang.org/grpc"
 )
 

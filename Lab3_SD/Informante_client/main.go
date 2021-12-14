@@ -23,6 +23,14 @@ var (
 	name = flag.String("name", defaultName, "Name to greet")
 )
 
+//Struct con los relojes
+type relojes struct {
+	planeta string
+	x       int
+	y       int
+	z       int
+}
+
 //Función que realiza consultas al Broker para obtener la dirección de algún Fulcrum al que conectarse a realiza el add
 func agCity(Data *pb.DataCity) pb.Clock {
 	//Consultar por la ip de un Server Fulcrum
@@ -156,7 +164,7 @@ func DeleteC(Data *pb.LocateCity) pb.Clock {
 	return pb.Clock{X: int32(reloj.X), Y: int32(reloj.Y), Z: int32(reloj.Z)}
 }
 
-func gnr() {
+func gnr() relojes {
 	flag.Parse()
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(*addr, grpc.WithInsecure())
@@ -175,6 +183,7 @@ func gnr() {
 	}
 	s := strings.Fields(linea)
 	var reloj pb.Clock
+	var planeta string
 	if s[0] == "AddCity" {
 		if len(s) == 4 {
 			numero, err := strconv.Atoi(s[3])
@@ -182,41 +191,63 @@ func gnr() {
 				fmt.Println("NuevoValor invalido: ", err)
 			} else {
 				reloj = agCity(&pb.DataCity{NombrePlaneta: s[1], NombreCiudad: s[2], NuevoValor: int32(numero)})
+				planeta = s[1]
 			}
 		} else {
 			reloj = agCity(&pb.DataCity{NombrePlaneta: s[1], NombreCiudad: s[2], NuevoValor: 0})
+			planeta = s[1]
 		}
 	} else if s[0] == "UpdateName" {
 		reloj = upNCity(&pb.ChangeNameCity{NombrePlaneta: s[1], NombreCiudad: s[2], NuevoNombre: s[3]})
+		planeta = s[1]
 	} else if s[0] == "UpdateNumber" {
 		numero, err := strconv.Atoi(s[3])
 		if err != nil {
 			fmt.Println("NuevoValor invalido: ", err)
 		} else {
 			reloj = upVCity(&pb.DataCity{NombrePlaneta: s[1], NombreCiudad: s[2], NuevoValor: int32(numero)})
+			planeta = s[1]
 		}
 	} else if s[0] == "DeleteCity" {
 		reloj = DeleteC(&pb.LocateCity{NombrePlaneta: s[1], NombreCiudad: s[2]})
+		planeta = s[1]
 	} else {
 		fmt.Println("Comando Invalido.")
 	}
 	// Contact the server and print out its response.
 	log.Printf("El reloj es:[ %s,%s,%s ]", strconv.Itoa(int(reloj.X)), strconv.Itoa(int(reloj.Y)), strconv.Itoa(int(reloj.Z)))
+	return relojes{planeta: planeta, x: int(reloj.X), y: int(reloj.Y), z: int(reloj.Z)}
 }
 
 func main() {
 	//conectar al Broker
 	flag := true
 	var opcion int
+
+	listarelojes := make([]relojes, 0)
 	for flag {
 		fmt.Println("Ingrese una opcion: ")
 		fmt.Println("1) Ingresar Comando")
 		fmt.Println("2) Salir.")
 		fmt.Scanln(&opcion)
 		if opcion == 1 {
-			gnr()
+			reloj := gnr()
+			if len(listarelojes) == 0 {
+				listarelojes = append(listarelojes, reloj)
+			} else {
+				for i := 0; i < len(listarelojes); i++ {
+					if listarelojes[i].planeta == reloj.planeta {
+						listarelojes[i].x = reloj.x
+						listarelojes[i].y = reloj.y
+						listarelojes[i].z = reloj.z
+					} else {
+						listarelojes = append(listarelojes, reloj)
+					}
+				}
+			}
 		} else {
 			flag = false
 		}
+		fmt.Println(listarelojes)
 	}
 }

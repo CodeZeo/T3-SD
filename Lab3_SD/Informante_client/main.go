@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 
@@ -36,6 +38,9 @@ func agCity(Data *pb.DataCity) pb.Clock {
 	cc := pb.NewBrokerClient(conn)
 	comando := "AddCity " + Data.NombrePlaneta + " " + Data.NombreCiudad + " " + strconv.Itoa(int(Data.NuevoValor))
 	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
+	if err != nil {
+		log.Fatalf("did not connect: %s", err)
+	}
 	//conectar al Fulcrum
 	conn, err = grpc.Dial(response.Ip, grpc.WithInsecure())
 	if err != nil {
@@ -45,6 +50,9 @@ func agCity(Data *pb.DataCity) pb.Clock {
 	ccc := pb.NewFulcrumClient(conn)
 	//realizar Create
 	reloj, err := ccc.AddCity(context.Background(), &pb.DataCity{})
+	if err != nil {
+		log.Fatalf("did not connect: %s", err)
+	}
 
 	return pb.Clock{X: int32(reloj.X), Y: int32(reloj.Y), Z: int32(reloj.Z)}
 }
@@ -53,7 +61,7 @@ func agCity(Data *pb.DataCity) pb.Clock {
 func upNCity(Data *pb.ChangeNameCity) pb.Clock {
 	//Consultar por la ip de un Server Fulcrum
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial("localhost:9003", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:9003", grpc.WithInsecure()) // deberia ser siempre 9003
 	if err != nil {
 		conn, err = grpc.Dial("localhost:9004", grpc.WithInsecure())
 		if err != nil {
@@ -64,6 +72,9 @@ func upNCity(Data *pb.ChangeNameCity) pb.Clock {
 	cc := pb.NewBrokerClient(conn)
 	comando := "UpdateName " + Data.NombrePlaneta + " " + Data.NombreCiudad + " " + Data.NuevoNombre
 	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
+	if err != nil {
+		log.Fatalf("did not connect: %s", err)
+	}
 	//conectar al Fulcrum
 	conn, err = grpc.Dial(response.Ip, grpc.WithInsecure())
 	if err != nil {
@@ -94,6 +105,9 @@ func upVCity(Data *pb.DataCity) pb.Clock {
 	cc := pb.NewBrokerClient(conn)
 	comando := "UpdateNumber" + Data.NombrePlaneta + " " + Data.NombreCiudad + " " + strconv.Itoa(int(Data.NuevoValor))
 	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
+	if err != nil {
+		log.Fatalf("did not connect: %s", err)
+	}
 	//conectar al Fulcrum
 	conn, err = grpc.Dial(response.Ip, grpc.WithInsecure())
 	if err != nil {
@@ -124,6 +138,9 @@ func DeleteC(Data *pb.LocateCity) pb.Clock {
 	cc := pb.NewBrokerClient(conn)
 	comando := "DeleteCity" + Data.NombrePlaneta + " " + Data.NombreCiudad
 	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
+	if err != nil {
+		log.Fatalf("did not connect: %s", err)
+	}
 	//conectar al Fulcrum
 	conn, err = grpc.Dial(response.Ip, grpc.WithInsecure())
 	if err != nil {
@@ -148,11 +165,14 @@ func gnr() {
 	}
 	defer conn.Close()
 	//c := pb.NewBrokerClient(conn)
-	var linea string
 
 	fmt.Println("Ingrese el comando: ")
-	fmt.Scanln(&linea)
 
+	in := bufio.NewReader(os.Stdin)
+	linea, err := in.ReadString('\n')
+	if err != nil {
+		log.Fatalf("err read: %v", err)
+	}
 	s := strings.Fields(linea)
 	var reloj pb.Clock
 	if s[0] == "AddCity" {

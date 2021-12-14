@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"math/rand"
 	"net"
 	"time"
 
@@ -24,7 +23,14 @@ func failOnError(err error, msg string) {
 	}
 }
 
-func (s *Server) getIP(ctx context.Context, command *pb.Command) (*pb.Conn, error) {
+func randomIP() string {
+	ips := []string{"localhost:9005", "localhost:9006", "localhost:9007"}
+	return ips[0] //mientras tanto para hacer pruebas
+	//return ips[rand.Intn(len(ips))]
+}
+
+func (s *Server) GetIP(ctx context.Context, command *pb.Command) (*pb.Conn, error) {
+	fmt.Println("GetIP invoked")
 
 	/* for Vivos < 15 {
 		time.Sleep(1 * time.Second) // Ojala funcione [si no chao]
@@ -32,17 +38,12 @@ func (s *Server) getIP(ctx context.Context, command *pb.Command) (*pb.Conn, erro
 	return &pb.Conn{Ip: randomIP()}, nil
 }
 
-func (s *Server) getNumberRebelds(ctx context.Context, locateCity *pb.LocateCity) (*pb.NumberRebelds, error) {
-
+func (s *Server) GetNumberRebelds(ctx context.Context, locateCity *pb.LocateCity) (*pb.NumberRebelds, error) {
+	fmt.Println("GNR invoked")
 	/* for Vivos < 15 {
 		time.Sleep(1 * time.Second) // Ojala funcione [si no chao]
 	} */
 	return &pb.NumberRebelds{NR: int32(gnr(locateCity.NombrePlaneta, locateCity.NombreCiudad))}, nil
-}
-
-func randomIP() string {
-	ips := []string{"localhost:9005", "localhost:9006", "localhost:9007"}
-	return ips[rand.Intn(len(ips))]
 }
 
 func gnr(planet string, city string) int {
@@ -58,6 +59,7 @@ func gnr(planet string, city string) int {
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
+	fmt.Println("Calling RNR")
 	r, err := c.ReturnNumberRebelds(ctx, &pb.LocateCity{NombrePlaneta: planet, NombreCiudad: city})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
@@ -68,7 +70,7 @@ func gnr(planet string, city string) int {
 // Main, basicamente corre todo
 func main() {
 
-	fmt.Println("Soy el Fulcrum!")
+	fmt.Println("Soy el Broker!")
 	//q, errr, ch := openRMQ()
 	// Estas variables se usan cada vez que se elimina alguien
 	// Se debe llamar a sendJugadorEliminadoPozo()

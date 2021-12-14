@@ -121,31 +121,31 @@ func fileDeleteCity(nombrePlaneta string, nombreCiudad string) {
 	sliceToFile(result, nombrePlaneta+".txt")
 }
 
-func (s *Server) returnNumberRebelds(ctx context.Context, numberRebelds *pb.Empty) (*pb.NumberRebelds, error) {
-
+func (s *Server) ReturnNumberRebelds(ctx context.Context, LocateCity *pb.LocateCity) (*pb.NumberRebelds, error) {
+	fmt.Println("RNR invoked")
 	return &pb.NumberRebelds{NR: int32(2)}, nil
 }
 
-func (s *Server) addCity(ctx context.Context, dataCity *pb.DataCity) (*pb.Clock, error) {
-
+func (s *Server) AddCity(ctx context.Context, dataCity *pb.DataCity) (*pb.Clock, error) {
+	fmt.Println("add city invoked")
 	fileAddCity(dataCity.NombrePlaneta, dataCity.NombreCiudad, int(dataCity.NuevoValor))
 	return &pb.Clock{X: 1, Y: 2, Z: 3}, nil
 }
 
-func (s *Server) updateName(ctx context.Context, ChangeNameCity *pb.ChangeNameCity) (*pb.Clock, error) {
-
+func (s *Server) UpdateName(ctx context.Context, ChangeNameCity *pb.ChangeNameCity) (*pb.Clock, error) {
+	fmt.Println("update name invoked")
 	fileUpdateName(ChangeNameCity.NombrePlaneta, ChangeNameCity.NombreCiudad, ChangeNameCity.NuevoNombre)
 	return &pb.Clock{X: 2, Y: 2, Z: 3}, nil
 }
 
-func (s *Server) updateNumber(ctx context.Context, dataCity *pb.DataCity) (*pb.Clock, error) {
-
+func (s *Server) UpdateNumber(ctx context.Context, dataCity *pb.DataCity) (*pb.Clock, error) {
+	fmt.Println("update number invoked")
 	fileUpdateNumber(dataCity.NombrePlaneta, dataCity.NombreCiudad, int(dataCity.NuevoValor))
 	return &pb.Clock{X: 3, Y: 2, Z: 3}, nil
 }
 
-func (s *Server) deleteCity(ctx context.Context, locateCity *pb.LocateCity) (*pb.Clock, error) {
-
+func (s *Server) DeleteCity(ctx context.Context, locateCity *pb.LocateCity) (*pb.Clock, error) {
+	fmt.Println("delete city invoked")
 	fileDeleteCity(locateCity.NombrePlaneta, locateCity.NombreCiudad)
 	return &pb.Clock{X: 3, Y: 2, Z: 3}, nil
 }

@@ -142,7 +142,7 @@ var Broker_ServiceDesc = grpc.ServiceDesc{
 type FulcrumClient interface {
 	ReturnNumberRebelds(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*NumberRebelds, error)
 	AddCity(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error)
-	UpdateName(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error)
+	UpdateName(ctx context.Context, in *ChangeNameCity, opts ...grpc.CallOption) (*Clock, error)
 	UpdateNumber(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error)
 	DeleteCity(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*Clock, error)
 }
@@ -173,7 +173,7 @@ func (c *fulcrumClient) AddCity(ctx context.Context, in *DataCity, opts ...grpc.
 	return out, nil
 }
 
-func (c *fulcrumClient) UpdateName(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error) {
+func (c *fulcrumClient) UpdateName(ctx context.Context, in *ChangeNameCity, opts ...grpc.CallOption) (*Clock, error) {
 	out := new(Clock)
 	err := c.cc.Invoke(ctx, "/comms.Fulcrum/updateName", in, out, opts...)
 	if err != nil {
@@ -206,7 +206,7 @@ func (c *fulcrumClient) DeleteCity(ctx context.Context, in *LocateCity, opts ...
 type FulcrumServer interface {
 	ReturnNumberRebelds(context.Context, *LocateCity) (*NumberRebelds, error)
 	AddCity(context.Context, *DataCity) (*Clock, error)
-	UpdateName(context.Context, *DataCity) (*Clock, error)
+	UpdateName(context.Context, *ChangeNameCity) (*Clock, error)
 	UpdateNumber(context.Context, *DataCity) (*Clock, error)
 	DeleteCity(context.Context, *LocateCity) (*Clock, error)
 	mustEmbedUnimplementedFulcrumServer()
@@ -222,7 +222,7 @@ func (UnimplementedFulcrumServer) ReturnNumberRebelds(context.Context, *LocateCi
 func (UnimplementedFulcrumServer) AddCity(context.Context, *DataCity) (*Clock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCity not implemented")
 }
-func (UnimplementedFulcrumServer) UpdateName(context.Context, *DataCity) (*Clock, error) {
+func (UnimplementedFulcrumServer) UpdateName(context.Context, *ChangeNameCity) (*Clock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateName not implemented")
 }
 func (UnimplementedFulcrumServer) UpdateNumber(context.Context, *DataCity) (*Clock, error) {
@@ -281,7 +281,7 @@ func _Fulcrum_AddCity_Handler(srv interface{}, ctx context.Context, dec func(int
 }
 
 func _Fulcrum_UpdateName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DataCity)
+	in := new(ChangeNameCity)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -293,7 +293,7 @@ func _Fulcrum_UpdateName_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/comms.Fulcrum/updateName",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FulcrumServer).UpdateName(ctx, req.(*DataCity))
+		return srv.(FulcrumServer).UpdateName(ctx, req.(*ChangeNameCity))
 	}
 	return interceptor(ctx, in, info, handler)
 }

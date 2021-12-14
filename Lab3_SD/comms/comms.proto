@@ -30,6 +30,12 @@ message DataCity {
     int32 nuevo_valor = 3; // 0 si es que no se escribe uno
 }
 
+message ChangeNameCity {
+    string nombre_planeta = 1;
+    string nombre_ciudad = 2;
+    string nuevo_nombre = 3;
+}
+
 message clock {
     int32 x = 1;
     int32 y = 2;
@@ -44,7 +50,7 @@ service Broker {
 service Fulcrum {
     rpc returnNumberRebelds(LocateCity) returns (NumberRebelds){}
     rpc addCity(DataCity) returns (clock){}
-    rpc updateName(DataCity) returns (clock){}
+    rpc updateName(ChangeNameCity) returns (clock){}
     rpc updateNumber(DataCity) returns (clock){}
     rpc deleteCity(LocateCity) returns (clock){}
 }

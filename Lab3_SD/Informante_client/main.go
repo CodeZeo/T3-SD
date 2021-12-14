@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strconv"
 
 	pb "github.com/CodeZeo/T3-SD/Lab3_SD/comms"
 	"google.golang.org/grpc"
@@ -71,14 +72,11 @@ func gnr() {
 	//if err != nil {
 	//	log.Fatalf("could not greet: %v", err)
 	//}
-	//log.Printf("El reloj es: %s", strconv.Itoa(int(r.NR)))
+	log.Printf("El reloj es:[ %s,%s,%s ]", strconv.Itoa(int(r.X)), strconv.Itoa(int(r.Y)), strconv.Itoa(int(r.Z)))
 }
 
 func main() {
 	//conectar al Broker
-
-	//agCity()
-
 	flag := true
 	var opcion int
 	for flag {
@@ -90,7 +88,6 @@ func main() {
 			gnr()
 		} else {
 			flag = false
-
 		}
 	}
 }

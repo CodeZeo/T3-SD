@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -23,6 +24,11 @@ func failOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s: %s", msg, err)
 	}
+}
+
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	return !errors.Is(err, os.ErrNotExist)
 }
 
 func fileToSlice(fileName string) ([][]string, error) {
@@ -140,9 +146,34 @@ func fileDeleteCity(nombrePlaneta string, nombreCiudad string) {
 	sliceToFile(result, nombrePlaneta+".txt")
 }
 
+// retorna -1 si el planeta no existe
+// retorna -2 si la ciudad no existe
+func fileNumberRebelds(planet string, city string) int {
+	fileName := planet + ".txt"
+	if !fileExists(fileName) {
+		return -1
+	}
+	lineas, err := fileToSlice(fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, linea := range lineas {
+		if lineValid(linea) {
+			if linea[1] == city {
+				num, err := strconv.Atoi(linea[2])
+				if err != nil {
+					log.Fatal(err)
+				}
+				return num
+			}
+		}
+	}
+	return -2
+}
+
 func (s *Server) ReturnNumberRebelds(ctx context.Context, LocateCity *pb.LocateCity) (*pb.NumberRebelds, error) {
 	fmt.Println("RNR invoked")
-	return &pb.NumberRebelds{NR: int32(2)}, nil
+	return &pb.NumberRebelds{NR: int32(fileNumberRebelds(LocateCity.NombrePlaneta, LocateCity.NombreCiudad))}, nil
 }
 
 func (s *Server) AddCity(ctx context.Context, dataCity *pb.DataCity) (*pb.Clock, error) {

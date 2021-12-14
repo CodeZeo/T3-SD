@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"strconv"
 	"time"
 
 	pb "github.com/CodeZeo/T3-SD/Lab3_SD/comms"
@@ -24,7 +23,7 @@ var (
 func gnr() {
 	flag.Parse()
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(*addr, grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:9003", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -46,7 +45,16 @@ func gnr() {
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("La cantidad de rebeldes es: %s", strconv.Itoa(int(r.NR)))
+	cantRebelds := int(r.NR)
+	if cantRebelds >= 0 {
+		log.Printf("La cantidad de rebeldes es: %d", cantRebelds)
+	} else if cantRebelds == -1 {
+		fmt.Println("El planeta no existe.")
+	} else if cantRebelds == -2 {
+		fmt.Println("La ciudad no existe.")
+	} else {
+		fmt.Println("uh, esto no deberia pasar nunca.")
+	}
 }
 
 func main() {

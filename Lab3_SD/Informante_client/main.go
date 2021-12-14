@@ -37,7 +37,7 @@ func agCity(Data *pb.DataCity) pb.Clock {
 	comando := "AddCity " + Data.NombrePlaneta + " " + Data.NombreCiudad + " " + strconv.Itoa(int(Data.NuevoValor))
 	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
 	//conectar al Fulcrum
-	conn, err = grpc.Dial(response.Ip+":9005", grpc.WithInsecure())
+	conn, err = grpc.Dial(response.Ip, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}
@@ -65,7 +65,7 @@ func upNCity(Data *pb.ChangeNameCity) pb.Clock {
 	comando := "UpdateName " + Data.NombrePlaneta + " " + Data.NombreCiudad + " " + Data.NuevoNombre
 	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
 	//conectar al Fulcrum
-	conn, err = grpc.Dial(response.Ip+":9005", grpc.WithInsecure())
+	conn, err = grpc.Dial(response.Ip, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}
@@ -95,7 +95,7 @@ func upVCity(Data *pb.DataCity) pb.Clock {
 	comando := "UpdateNumber" + Data.NombrePlaneta + " " + Data.NombreCiudad + " " + strconv.Itoa(int(Data.NuevoValor))
 	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
 	//conectar al Fulcrum
-	conn, err = grpc.Dial(response.Ip+":9005", grpc.WithInsecure())
+	conn, err = grpc.Dial(response.Ip, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}
@@ -125,7 +125,7 @@ func DeleteC(Data *pb.LocateCity) pb.Clock {
 	comando := "DeleteCity" + Data.NombrePlaneta + " " + Data.NombreCiudad
 	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
 	//conectar al Fulcrum
-	conn, err = grpc.Dial(response.Ip+":9005", grpc.WithInsecure())
+	conn, err = grpc.Dial(response.Ip, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}
@@ -181,12 +181,6 @@ func gnr() {
 		fmt.Println("Comando Invalido.")
 	}
 	// Contact the server and print out its response.
-	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	//defer cancel()
-	//r := agCity(&pb.DataCity{NombrePlaneta: planeta, NombreCiudad: ciudad, NuevoValor: 0})
-	//if err != nil {
-	//	log.Fatalf("could not greet: %v", err)
-	//}
 	log.Printf("El reloj es:[ %s,%s,%s ]", strconv.Itoa(int(reloj.X)), strconv.Itoa(int(reloj.Y)), strconv.Itoa(int(reloj.Z)))
 }
 

@@ -145,6 +145,7 @@ type FulcrumClient interface {
 	UpdateName(ctx context.Context, in *ChangeNameCity, opts ...grpc.CallOption) (*Clock, error)
 	UpdateNumber(ctx context.Context, in *DataCity, opts ...grpc.CallOption) (*Clock, error)
 	DeleteCity(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*Clock, error)
+	GetClock(ctx context.Context, in *Planet, opts ...grpc.CallOption) (*Clock, error)
 }
 
 type fulcrumClient struct {
@@ -200,6 +201,15 @@ func (c *fulcrumClient) DeleteCity(ctx context.Context, in *LocateCity, opts ...
 	return out, nil
 }
 
+func (c *fulcrumClient) GetClock(ctx context.Context, in *Planet, opts ...grpc.CallOption) (*Clock, error) {
+	out := new(Clock)
+	err := c.cc.Invoke(ctx, "/comms.Fulcrum/getClock", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FulcrumServer is the server API for Fulcrum service.
 // All implementations must embed UnimplementedFulcrumServer
 // for forward compatibility
@@ -209,6 +219,7 @@ type FulcrumServer interface {
 	UpdateName(context.Context, *ChangeNameCity) (*Clock, error)
 	UpdateNumber(context.Context, *DataCity) (*Clock, error)
 	DeleteCity(context.Context, *LocateCity) (*Clock, error)
+	GetClock(context.Context, *Planet) (*Clock, error)
 	mustEmbedUnimplementedFulcrumServer()
 }
 
@@ -230,6 +241,9 @@ func (UnimplementedFulcrumServer) UpdateNumber(context.Context, *DataCity) (*Clo
 }
 func (UnimplementedFulcrumServer) DeleteCity(context.Context, *LocateCity) (*Clock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCity not implemented")
+}
+func (UnimplementedFulcrumServer) GetClock(context.Context, *Planet) (*Clock, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetClock not implemented")
 }
 func (UnimplementedFulcrumServer) mustEmbedUnimplementedFulcrumServer() {}
 
@@ -334,6 +348,24 @@ func _Fulcrum_DeleteCity_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Fulcrum_GetClock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Planet)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FulcrumServer).GetClock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/comms.Fulcrum/getClock",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FulcrumServer).GetClock(ctx, req.(*Planet))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Fulcrum_ServiceDesc is the grpc.ServiceDesc for Fulcrum service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -360,6 +392,10 @@ var Fulcrum_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "deleteCity",
 			Handler:    _Fulcrum_DeleteCity_Handler,
+		},
+		{
+			MethodName: "getClock",
+			Handler:    _Fulcrum_GetClock_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

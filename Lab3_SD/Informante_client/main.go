@@ -24,7 +24,7 @@ type relojes struct {
 
 var listarelojes []relojes
 
-//comparar relojes
+//Compara relojes
 func compareClock(planeta string, relojj *pb.Clock) bool {
 	consistencia := true
 	for i := 0; i < len(listarelojes); i++ {
@@ -41,12 +41,13 @@ func compareClock(planeta string, relojj *pb.Clock) bool {
 func agCity(Data *pb.DataCity) pb.Clock {
 	//Consultar por la ip de un Server Fulcrum
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial("localhost:9003", grpc.WithInsecure())
+	conn, err := grpc.Dial("10.6.40.233:9003", grpc.WithInsecure())
 	if err != nil {
-		conn, err = grpc.Dial("localhost:9004", grpc.WithInsecure())
-		if err != nil {
-			log.Fatalf("did not connect: %s", err)
-		}
+		//conn, err = grpc.Dial("10.6.40.233:9004", grpc.WithInsecure())
+		//if err != nil {
+		//	log.Fatalf("did not connect: %s", err)
+		//}
+		log.Fatalf("did not connect: %s", err)
 	}
 	defer conn.Close()
 	cc := pb.NewBrokerClient(conn)
@@ -75,12 +76,13 @@ func agCity(Data *pb.DataCity) pb.Clock {
 func upNCity(Data *pb.ChangeNameCity) pb.Clock {
 	//Consultar por la ip de un Server Fulcrum
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial("localhost:9003", grpc.WithInsecure()) // deberia ser siempre 9003
+	conn, err := grpc.Dial("10.6.40.233:9003", grpc.WithInsecure()) // deberia ser siempre 9003
 	if err != nil {
-		conn, err = grpc.Dial("localhost:9004", grpc.WithInsecure())
-		if err != nil {
-			log.Fatalf("did not connect: %s", err)
-		}
+		//conn, err = grpc.Dial("10.6.40.233:9004", grpc.WithInsecure())
+		//if err != nil {
+		//	log.Fatalf("did not connect: %s", err)
+		//}
+		log.Fatalf("did not connect: %s", err)
 	}
 	defer conn.Close()
 	cc := pb.NewBrokerClient(conn)
@@ -108,12 +110,13 @@ func upNCity(Data *pb.ChangeNameCity) pb.Clock {
 func upVCity(Data *pb.DataCity) pb.Clock {
 	//Consultar por la ip de un Server Fulcrum
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial("localhost:9003", grpc.WithInsecure())
+	conn, err := grpc.Dial("10.6.40.233:9003", grpc.WithInsecure())
 	if err != nil {
-		conn, err = grpc.Dial("localhost:9004", grpc.WithInsecure())
-		if err != nil {
-			log.Fatalf("did not connect: %s", err)
-		}
+		//conn, err = grpc.Dial("10.6.40.233:9004", grpc.WithInsecure())
+		//if err != nil {
+		//	log.Fatalf("did not connect: %s", err)
+		//}
+		log.Fatalf("did not connect: %s", err)
 	}
 	defer conn.Close()
 	cc := pb.NewBrokerClient(conn)
@@ -141,12 +144,13 @@ func upVCity(Data *pb.DataCity) pb.Clock {
 func DeleteC(Data *pb.LocateCity) pb.Clock {
 	//Consultar por la ip de un Server Fulcrum
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial("localhost:9003", grpc.WithInsecure())
+	conn, err := grpc.Dial("10.6.40.233:9003", grpc.WithInsecure())
 	if err != nil {
-		conn, err = grpc.Dial("localhost:9004", grpc.WithInsecure())
-		if err != nil {
-			log.Fatalf("did not connect: %s", err)
-		}
+		//conn, err = grpc.Dial("10.6.40.233:9004", grpc.WithInsecure())
+		//if err != nil {
+		//	log.Fatalf("did not connect: %s", err)
+		//}
+		log.Fatalf("did not connect: %s", err)
 	}
 	defer conn.Close()
 	cc := pb.NewBrokerClient(conn)
@@ -180,7 +184,8 @@ func DeleteC(Data *pb.LocateCity) pb.Clock {
 	return pb.Clock{X: int32(reloj.X), Y: int32(reloj.Y), Z: int32(reloj.Z)}
 }
 
-func gnr() relojes {
+// Funcion auxiliar que maneja los comandos ingresados
+func coms() relojes {
 	flag.Parse() // no se que hace esto pero me da miedo sacarlo
 	//c := pb.NewBrokerClient(conn)
 
@@ -241,7 +246,7 @@ func main() {
 		fmt.Println("2) Salir.")
 		fmt.Scanln(&opcion)
 		if opcion == 1 {
-			reloj := gnr()
+			reloj := coms()
 			if len(listarelojes) == 0 {
 				listarelojes = append(listarelojes, reloj)
 			} else {

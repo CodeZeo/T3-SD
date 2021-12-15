@@ -18,8 +18,9 @@ type Server struct {
 	pb.UnimplementedBrokerServer
 }
 
+// Obtiene el fulcrum con el reloj más avanzado para mantener la consistencia
 func getLatestServerPlanet(planet string) (string, int, int, int) {
-	ips := []string{"localhost:9005", "localhost:9006", "localhost:9007"}
+	ips := []string{"10.6.40.230:9005", "10.6.40.231:9006", "10.6.40.232:9007"}
 	latest := 0 // el clock mas tardio
 	posLatest := rand.Intn(len(ips))
 	clockChosen := []int{0, 0, 0}
@@ -58,6 +59,7 @@ func getLatestServerPlanet(planet string) (string, int, int, int) {
 //	return ips[rand.Intn(len(ips))]
 //}
 
+// Revisa si un comando es valido
 func commandValid(c []string) bool {
 	for _, cosa := range c {
 		if len(cosa) > 0 {
@@ -67,6 +69,7 @@ func commandValid(c []string) bool {
 	return false
 }
 
+// Obtiene el IP para hacer el comando
 func (s *Server) GetIP(ctx context.Context, command *pb.Command) (*pb.Conn, error) {
 	strings := strings.Fields(command.C)
 	var retorno string
@@ -83,6 +86,7 @@ func (s *Server) GetIP(ctx context.Context, command *pb.Command) (*pb.Conn, erro
 	return &pb.Conn{Ip: retorno}, nil
 }
 
+// Obtiene y envia el numero de rebeldes en una ciudad
 func (s *Server) GetNumberRebelds(ctx context.Context, locateCity *pb.LocateCity) (*pb.NumberRebeldsClock, error) {
 	fmt.Println("GNR invoked")
 	/* for Vivos < 15 {
@@ -92,6 +96,7 @@ func (s *Server) GetNumberRebelds(ctx context.Context, locateCity *pb.LocateCity
 	return &pb.NumberRebeldsClock{NR: int32(nr), X: int32(x), Y: int32(y), Z: int32(z), Ip: ip}, nil
 }
 
+// Funcion auxiliar que hace la consulta de los rebeldes, para limpiar el servicio
 func gnr(planet string, city string) (int, int, int, int, string) {
 	flag.Parse()
 	// Set up a connection to the server.
@@ -118,13 +123,6 @@ func gnr(planet string, city string) (int, int, int, int, string) {
 func main() {
 
 	fmt.Println("Soy el Broker!")
-	//q, errr, ch := openRMQ()
-	// Estas variables se usan cada vez que se elimina alguien
-	// Se debe llamar a sendJugadorEliminadoPozo()
-
-	//parte cliente Lider-nameNode
-	//parte Servidor Lider-Jugadores
-	//cantRondasJuego1 := 1
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 9003))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

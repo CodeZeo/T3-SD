@@ -29,7 +29,7 @@ type reloj struct {
 var relojesfulcrum []reloj
 var posi int
 
-//actualizar relojes
+//Actualiza los relojes
 func updateReloj(planeta string) int {
 	var relojito reloj
 	var indice int
@@ -97,18 +97,14 @@ func updateReloj(planeta string) int {
 	return indice
 }
 
-// anexo para tratar errores
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s: %s", msg, err)
-	}
-}
-
+// Revisa si un archivo existe
 func fileExists(path string) bool {
 	_, err := os.Stat(path)
 	return !errors.Is(err, os.ErrNotExist)
 }
 
+// Toma un archivo, y devuelve un slice de slice que
+// son las lineas, separadas por espacio
 func fileToSlice(fileName string) ([][]string, error) {
 	content, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -122,6 +118,7 @@ func fileToSlice(fileName string) ([][]string, error) {
 	return result, nil
 }
 
+// Revisa si una linea es valida, sirve para obviar los espacios en blanco
 func lineValid(line []string) bool {
 	for _, cosa := range line {
 		if len(cosa) > 0 {
@@ -131,6 +128,9 @@ func lineValid(line []string) bool {
 	return false
 }
 
+// Toma un slice de slice de strings y lo convierte en
+// un archivo de nombre fileName con cada linea un substring,
+// y cada subsub string una palabra separada por espacio
 func sliceToFile(slice [][]string, fileName string) {
 	f, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
@@ -153,6 +153,7 @@ func sliceToFile(slice [][]string, fileName string) {
 	}
 }
 
+//Revisa si un archivo existe, y si no existe lo crea
 func createFile(name string) {
 	_, err := os.Stat(name)
 	if os.IsNotExist(err) {
@@ -160,6 +161,7 @@ func createFile(name string) {
 	}
 }
 
+// Le agrega una ciudad a un archivo planeta
 func fileAddCity(nombrePlaneta string, nombreCiudad string, valor int) {
 	fmt.Println("started file add city")
 	fmt.Println(nombrePlaneta) // esto esta vacio
@@ -195,6 +197,7 @@ func fileAddCity(nombrePlaneta string, nombreCiudad string, valor int) {
 
 }
 
+// Le actualiza el nombre a una ciudad en el archivo planeta
 func fileUpdateName(nombrePlaneta string, nombreCiudad string, nuevoNombre string) {
 	content, err := fileToSlice(nombrePlaneta + ".txt")
 	if err != nil {
@@ -227,6 +230,7 @@ func fileUpdateName(nombrePlaneta string, nombreCiudad string, nuevoNombre strin
 	}
 }
 
+// Le actualiza la cantidad de rebeldes a una ciudad en el archivo planeta
 func fileUpdateNumber(nombrePlaneta string, nombreCiudad string, valor int) {
 	content, err := fileToSlice(nombrePlaneta + ".txt")
 	if err != nil {
@@ -259,6 +263,7 @@ func fileUpdateNumber(nombrePlaneta string, nombreCiudad string, valor int) {
 	}
 }
 
+// Elimina una ciudad en un archivo planeta
 func fileDeleteCity(nombrePlaneta string, nombreCiudad string) {
 	content, err := fileToSlice(nombrePlaneta + ".txt")
 	if err != nil {
@@ -292,6 +297,7 @@ func fileDeleteCity(nombrePlaneta string, nombreCiudad string) {
 	}
 }
 
+// Devuelve la cantidad de rebeldes en una ciudad
 // retorna -1 si el planeta no existe
 // retorna -2 si la ciudad no existe
 func fileNumberRebelds(planet string, city string) int {
@@ -317,11 +323,13 @@ func fileNumberRebelds(planet string, city string) int {
 	return -2
 }
 
+// Servicio que retorna la cantidad de rebeldes en una ciudad
 func (s *Server) ReturnNumberRebelds(ctx context.Context, LocateCity *pb.LocateCity) (*pb.NumberRebelds, error) {
 	fmt.Println("RNR invoked")
 	return &pb.NumberRebelds{NR: int32(fileNumberRebelds(LocateCity.NombrePlaneta, LocateCity.NombreCiudad))}, nil
 }
 
+// Servicio que crea la ciudad, y retorna el reloj
 func (s *Server) AddCity(ctx context.Context, dataCity *pb.DataCity) (*pb.Clock, error) {
 	fmt.Println("add city invoked")
 	fileAddCity(dataCity.NombrePlaneta, dataCity.NombreCiudad, int(dataCity.NuevoValor))
@@ -329,6 +337,7 @@ func (s *Server) AddCity(ctx context.Context, dataCity *pb.DataCity) (*pb.Clock,
 	return &pb.Clock{X: int32(relojesfulcrum[i].x), Y: int32(relojesfulcrum[i].y), Z: int32(relojesfulcrum[i].z)}, nil
 }
 
+// Servicio que actualiza el nombre de la ciudad, y retorna el reloj
 func (s *Server) UpdateName(ctx context.Context, ChangeNameCity *pb.ChangeNameCity) (*pb.Clock, error) {
 	fmt.Println("update name invoked")
 	fileUpdateName(ChangeNameCity.NombrePlaneta, ChangeNameCity.NombreCiudad, ChangeNameCity.NuevoNombre)
@@ -336,6 +345,7 @@ func (s *Server) UpdateName(ctx context.Context, ChangeNameCity *pb.ChangeNameCi
 	return &pb.Clock{X: int32(relojesfulcrum[i].x), Y: int32(relojesfulcrum[i].y), Z: int32(relojesfulcrum[i].z)}, nil
 }
 
+// Servicio que actualiza la cantidad de rebeldes de la ciudad, y retorna el reloj
 func (s *Server) UpdateNumber(ctx context.Context, dataCity *pb.DataCity) (*pb.Clock, error) {
 	fmt.Println("update number invoked")
 	fileUpdateNumber(dataCity.NombrePlaneta, dataCity.NombreCiudad, int(dataCity.NuevoValor))
@@ -343,6 +353,7 @@ func (s *Server) UpdateNumber(ctx context.Context, dataCity *pb.DataCity) (*pb.C
 	return &pb.Clock{X: int32(relojesfulcrum[i].x), Y: int32(relojesfulcrum[i].y), Z: int32(relojesfulcrum[i].z)}, nil
 }
 
+// Servicio que elimina la ciudad, y retorna el reloj
 func (s *Server) DeleteCity(ctx context.Context, locateCity *pb.LocateCity) (*pb.Clock, error) {
 	fmt.Println("delete city invoked")
 	fileDeleteCity(locateCity.NombrePlaneta, locateCity.NombreCiudad)
@@ -350,6 +361,7 @@ func (s *Server) DeleteCity(ctx context.Context, locateCity *pb.LocateCity) (*pb
 	return &pb.Clock{X: int32(relojesfulcrum[i].x), Y: int32(relojesfulcrum[i].y), Z: int32(relojesfulcrum[i].z)}, nil
 }
 
+// Servicio que y retorna el reloj de un planeta
 func (s *Server) GetClock(ctx context.Context, planeta *pb.Planet) (*pb.Clock, error) {
 	var x1 int
 	var y1 int

@@ -11,19 +11,10 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	defaultName = "world"
-)
-
-var (
-	addr = flag.String("addr", "localhost:50051", "the address to connect to")
-	name = flag.String("name", defaultName, "Name to greet")
-)
-
 func gnr() {
 	flag.Parse()
 	// Set up a connection to the server.
-	conn, err := grpc.Dial("localhost:9003", grpc.WithInsecure())
+	conn, err := grpc.Dial("10.6.40.233:9003", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -49,7 +40,7 @@ func gnr() {
 	if cantRebelds >= 0 {
 		log.Printf("La cantidad de rebeldes es: %d", cantRebelds)
 		fmt.Printf("El reloj encontrado es: {%d %d %d}", r.X, r.Y, r.Z)
-		println("En la IP: %s", r.Ip)
+		println("En la IP:", r.Ip)
 	} else if cantRebelds == -1 {
 		fmt.Println("El planeta no existe.")
 	} else if cantRebelds == -2 {

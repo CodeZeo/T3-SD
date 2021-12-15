@@ -1,8 +1,8 @@
-run89:	runleia runfulcrum0
+run89:	runfulcrum0 runleia
 
-run90:	runinfo runfulcrum1
+run90:	runfulcrum1 runinfo
 
-run91:	runinfo runfulcrum2
+run91:	runfulcrum2 runinfo
 
 run92:	runbroker
 

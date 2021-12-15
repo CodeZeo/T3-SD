@@ -19,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BrokerClient interface {
 	GetIP(ctx context.Context, in *Command, opts ...grpc.CallOption) (*Conn, error)
-	GetNumberRebelds(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*NumberRebelds, error)
+	GetNumberRebelds(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*NumberRebeldsClock, error)
 }
 
 type brokerClient struct {
@@ -39,8 +39,8 @@ func (c *brokerClient) GetIP(ctx context.Context, in *Command, opts ...grpc.Call
 	return out, nil
 }
 
-func (c *brokerClient) GetNumberRebelds(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*NumberRebelds, error) {
-	out := new(NumberRebelds)
+func (c *brokerClient) GetNumberRebelds(ctx context.Context, in *LocateCity, opts ...grpc.CallOption) (*NumberRebeldsClock, error) {
+	out := new(NumberRebeldsClock)
 	err := c.cc.Invoke(ctx, "/comms.Broker/getNumberRebelds", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (c *brokerClient) GetNumberRebelds(ctx context.Context, in *LocateCity, opt
 // for forward compatibility
 type BrokerServer interface {
 	GetIP(context.Context, *Command) (*Conn, error)
-	GetNumberRebelds(context.Context, *LocateCity) (*NumberRebelds, error)
+	GetNumberRebelds(context.Context, *LocateCity) (*NumberRebeldsClock, error)
 	mustEmbedUnimplementedBrokerServer()
 }
 
@@ -64,7 +64,7 @@ type UnimplementedBrokerServer struct {
 func (UnimplementedBrokerServer) GetIP(context.Context, *Command) (*Conn, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetIP not implemented")
 }
-func (UnimplementedBrokerServer) GetNumberRebelds(context.Context, *LocateCity) (*NumberRebelds, error) {
+func (UnimplementedBrokerServer) GetNumberRebelds(context.Context, *LocateCity) (*NumberRebeldsClock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNumberRebelds not implemented")
 }
 func (UnimplementedBrokerServer) mustEmbedUnimplementedBrokerServer() {}

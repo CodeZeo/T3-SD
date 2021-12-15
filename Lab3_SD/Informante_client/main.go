@@ -14,21 +14,27 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	defaultName = "world"
-)
-
-var (
-	addr = flag.String("addr", "localhost:50051", "the address to connect to")
-	name = flag.String("name", defaultName, "Name to greet")
-)
-
 //Struct con los relojes
 type relojes struct {
 	planeta string
 	x       int
 	y       int
 	z       int
+}
+
+var listarelojes []relojes
+
+//comparar relojes
+func compareClock(planeta string, relojj *pb.Clock) bool {
+	consistencia := true
+	for i := 0; i < len(listarelojes); i++ {
+		if listarelojes[i].planeta == planeta {
+			if int32(listarelojes[i].x) > relojj.X || int32(listarelojes[i].y) > relojj.Y || int32(listarelojes[i].z) > relojj.Z {
+				consistencia = false
+			}
+		}
+	}
+	return consistencia
 }
 
 //Función que realiza consultas al Broker para obtener la dirección de algún Fulcrum al que conectarse a realiza el add
@@ -111,7 +117,7 @@ func upVCity(Data *pb.DataCity) pb.Clock {
 	}
 	defer conn.Close()
 	cc := pb.NewBrokerClient(conn)
-	comando := "UpdateNumber" + Data.NombrePlaneta + " " + Data.NombreCiudad + " " + strconv.Itoa(int(Data.NuevoValor))
+	comando := "UpdateNumber " + Data.NombrePlaneta + " " + Data.NombreCiudad + " " + strconv.Itoa(int(Data.NuevoValor))
 	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
@@ -144,7 +150,8 @@ func DeleteC(Data *pb.LocateCity) pb.Clock {
 	}
 	defer conn.Close()
 	cc := pb.NewBrokerClient(conn)
-	comando := "DeleteCity" + Data.NombrePlaneta + " " + Data.NombreCiudad
+	comando := "DeleteCity " + Data.NombrePlaneta + " " + Data.NombreCiudad //broker
+	//DeleteCity Planeta Ciudad
 	response, err := cc.GetIP(context.Background(), &pb.Command{C: comando})
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
@@ -156,6 +163,15 @@ func DeleteC(Data *pb.LocateCity) pb.Clock {
 	}
 	defer conn.Close()
 	ccc := pb.NewFulcrumClient(conn)
+	//comparar reloj
+	//relojito, err := ccc.GetClock(context.Background(), &pb.Planet{Planet: Data.NombrePlaneta})
+	//if err != nil {
+	//	log.Fatalf("did not delete: %s", err)
+	//}
+	//consistencia:=compareClock(Data.NombrePlaneta,relojito)
+	//if consistencia==false{
+	//
+	//}
 	//realizar Create
 	reloj, err := ccc.DeleteCity(context.Background(), &pb.LocateCity{NombrePlaneta: Data.NombrePlaneta, NombreCiudad: Data.NombreCiudad})
 	if err != nil {
@@ -165,13 +181,7 @@ func DeleteC(Data *pb.LocateCity) pb.Clock {
 }
 
 func gnr() relojes {
-	flag.Parse()
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(*addr, grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
+	flag.Parse() // no se que hace esto pero me da miedo sacarlo
 	//c := pb.NewBrokerClient(conn)
 
 	fmt.Println("Ingrese el comando: ")
@@ -224,7 +234,7 @@ func main() {
 	flag := true
 	var opcion int
 
-	listarelojes := make([]relojes, 0)
+	//listarelojes := make([]relojes, 0)
 	for flag {
 		fmt.Println("Ingrese una opcion: ")
 		fmt.Println("1) Ingresar Comando")
@@ -240,7 +250,8 @@ func main() {
 						listarelojes[i].x = reloj.x
 						listarelojes[i].y = reloj.y
 						listarelojes[i].z = reloj.z
-					} else {
+						i = len(listarelojes)
+					} else if i == len(listarelojes)-1 {
 						listarelojes = append(listarelojes, reloj)
 					}
 				}

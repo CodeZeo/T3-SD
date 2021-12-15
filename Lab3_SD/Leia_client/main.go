@@ -48,6 +48,8 @@ func gnr() {
 	cantRebelds := int(r.NR)
 	if cantRebelds >= 0 {
 		log.Printf("La cantidad de rebeldes es: %d", cantRebelds)
+		fmt.Printf("El reloj encontrado es: {%d %d %d}", r.X, r.Y, r.Z)
+		println("En la IP: %s", r.Ip)
 	} else if cantRebelds == -1 {
 		fmt.Println("El planeta no existe.")
 	} else if cantRebelds == -2 {

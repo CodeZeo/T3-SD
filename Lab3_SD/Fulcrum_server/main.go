@@ -19,6 +19,84 @@ type Server struct {
 	pb.UnimplementedFulcrumServer
 }
 
+type reloj struct {
+	planeta string
+	x       int
+	y       int
+	z       int
+}
+
+var relojesfulcrum []reloj
+var posi int
+
+//actualizar relojes
+func updateReloj(planeta string) int {
+	var relojito reloj
+	var indice int
+	if len(relojesfulcrum) != 0 {
+		for i := 0; i < len(relojesfulcrum); i++ {
+			if planeta == relojesfulcrum[i].planeta {
+				if posi == 0 {
+					relojesfulcrum[i].x = relojesfulcrum[i].x + 1
+				} else if posi == 1 {
+					relojesfulcrum[i].y = relojesfulcrum[i].y + 1
+				} else {
+					relojesfulcrum[i].z = relojesfulcrum[i].z + 1
+				}
+				indice = i
+				i = len(relojesfulcrum)
+			} else if i == len(relojesfulcrum)-1 {
+				if posi == 0 {
+					relojito.planeta = planeta
+					relojito.z = 0
+					relojito.x = 0
+					relojito.x = 1
+					relojesfulcrum = append(relojesfulcrum, relojito)
+					indice = len(relojesfulcrum) - 1
+				} else if posi == 1 {
+					relojito.planeta = planeta
+					relojito.z = 0
+					relojito.x = 0
+					relojito.y = 1
+					relojesfulcrum = append(relojesfulcrum, relojito)
+					indice = len(relojesfulcrum) - 1
+				} else {
+					relojito.planeta = planeta
+					relojito.z = 1
+					relojito.x = 0
+					relojito.y = 0
+					relojesfulcrum = append(relojesfulcrum, relojito)
+					indice = len(relojesfulcrum) - 1
+				}
+			}
+		}
+	} else {
+		if posi == 0 {
+			relojito.planeta = planeta
+			relojito.z = 0
+			relojito.x = 0
+			relojito.x = 1
+			relojesfulcrum = append(relojesfulcrum, relojito)
+			indice = len(relojesfulcrum) - 1
+		} else if posi == 1 {
+			relojito.planeta = planeta
+			relojito.z = 0
+			relojito.x = 0
+			relojito.y = 1
+			relojesfulcrum = append(relojesfulcrum, relojito)
+			indice = len(relojesfulcrum) - 1
+		} else {
+			relojito.planeta = planeta
+			relojito.z = 1
+			relojito.x = 0
+			relojito.y = 0
+			relojesfulcrum = append(relojesfulcrum, relojito)
+			indice = len(relojesfulcrum) - 1
+		}
+	}
+	return indice
+}
+
 // anexo para tratar errores
 func failOnError(err error, msg string) {
 	if err != nil {
@@ -247,30 +325,71 @@ func (s *Server) ReturnNumberRebelds(ctx context.Context, LocateCity *pb.LocateC
 func (s *Server) AddCity(ctx context.Context, dataCity *pb.DataCity) (*pb.Clock, error) {
 	fmt.Println("add city invoked")
 	fileAddCity(dataCity.NombrePlaneta, dataCity.NombreCiudad, int(dataCity.NuevoValor))
-	return &pb.Clock{X: 1, Y: 2, Z: 3}, nil
+	i := updateReloj(dataCity.NombrePlaneta)
+	return &pb.Clock{X: int32(relojesfulcrum[i].x), Y: int32(relojesfulcrum[i].y), Z: int32(relojesfulcrum[i].z)}, nil
 }
 
 func (s *Server) UpdateName(ctx context.Context, ChangeNameCity *pb.ChangeNameCity) (*pb.Clock, error) {
 	fmt.Println("update name invoked")
 	fileUpdateName(ChangeNameCity.NombrePlaneta, ChangeNameCity.NombreCiudad, ChangeNameCity.NuevoNombre)
-	return &pb.Clock{X: 2, Y: 2, Z: 3}, nil
+	i := updateReloj(ChangeNameCity.NombrePlaneta)
+	return &pb.Clock{X: int32(relojesfulcrum[i].x), Y: int32(relojesfulcrum[i].y), Z: int32(relojesfulcrum[i].z)}, nil
 }
 
 func (s *Server) UpdateNumber(ctx context.Context, dataCity *pb.DataCity) (*pb.Clock, error) {
 	fmt.Println("update number invoked")
 	fileUpdateNumber(dataCity.NombrePlaneta, dataCity.NombreCiudad, int(dataCity.NuevoValor))
-	return &pb.Clock{X: 3, Y: 2, Z: 3}, nil
+	i := updateReloj(dataCity.NombrePlaneta)
+	return &pb.Clock{X: int32(relojesfulcrum[i].x), Y: int32(relojesfulcrum[i].y), Z: int32(relojesfulcrum[i].z)}, nil
 }
 
 func (s *Server) DeleteCity(ctx context.Context, locateCity *pb.LocateCity) (*pb.Clock, error) {
 	fmt.Println("delete city invoked")
 	fileDeleteCity(locateCity.NombrePlaneta, locateCity.NombreCiudad)
-	return &pb.Clock{X: 3, Y: 2, Z: 3}, nil
+	i := updateReloj(locateCity.NombrePlaneta)
+	return &pb.Clock{X: int32(relojesfulcrum[i].x), Y: int32(relojesfulcrum[i].y), Z: int32(relojesfulcrum[i].z)}, nil
+}
+
+func (s *Server) GetClock(ctx context.Context, planeta *pb.Planet) (*pb.Clock, error) {
+	var x1 int
+	var y1 int
+	var z1 int
+	if len(relojesfulcrum) != 0 {
+		for i := 0; i < len(relojesfulcrum); i++ {
+			if planeta.Planet == relojesfulcrum[i].planeta {
+				x1 = relojesfulcrum[i].x
+				y1 = relojesfulcrum[i].y
+				z1 = relojesfulcrum[i].z
+				i = len(relojesfulcrum)
+			} else if i == len(relojesfulcrum)-1 {
+				x1 = 0
+				y1 = 0
+				z1 = 0
+			}
+		}
+	} else {
+		x1 = 0
+		y1 = 0
+		z1 = 0
+	}
+	return &pb.Clock{X: int32(x1), Y: int32(y1), Z: int32(z1)}, nil
 }
 
 // Main, basicamente corre todo
 func main() {
 
+	if len(os.Args) < 2 {
+		log.Fatalln("no se especifico correctmente el fullcrum a correr, deberia ser go run main.go 0 o go run main.go 1 o go run main.go 2")
+	}
+	if os.Args[1] == "0" {
+		posi = 0
+	} else if os.Args[1] == "1" {
+		posi = 1
+	} else if os.Args[1] == "2" {
+		posi = 2
+	} else {
+		log.Fatalln("no se especifico correctmente el fullcrum a correr, deberia ser go run main.go 0 o go run main.go 1 o go run main.go 2")
+	}
 	fmt.Println("Soy el Fulcrum!")
 	//q, errr, ch := openRMQ()
 	// Estas variables se usan cada vez que se elimina alguien
@@ -279,7 +398,8 @@ func main() {
 	//parte cliente Lider-nameNode
 	//parte Servidor Lider-Jugadores
 	//cantRondasJuego1 := 1
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 9005)) //9005 o 9006 o 9007
+	puerto := []int{9005, 9006, 9007}
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", puerto[posi])) //9005 o 9006 o 9007
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
